@@ -7,8 +7,14 @@ app.use(express.urlencoded())
 app.use(express.json()) 
 app.use(cors())
 
-app.get('/', (req, res) => {
-    res.send("Hello")
+app.get('/api/get', (req, res) => {
+    const sqlInsert = "SELECT * FROM todo"
+    db.query(sqlInsert, (error, results, fields) => {
+        res.json(results)
+        if(error)
+            throw error
+    })
+    
 })
 
 app.post('/api/insert', (req, res, next) => {
@@ -17,7 +23,6 @@ app.post('/api/insert', (req, res, next) => {
     
     const sqlInsert = "INSERT INTO todo(todo_title, todo_content) VALUES (?, ?)"
     db.query(sqlInsert, [todo_title, todo_content], (error, results, fields) => {
-        console.log(results);
         if(error) 
             throw error;
     })
